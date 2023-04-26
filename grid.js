@@ -1,52 +1,36 @@
-// Create a canvas element
-var canvas = document.getElementById("canvas");
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
 
-// Set the canvas size
-canvas.width = 400;
-canvas.height = 400;
-
-// Create a new Isomer instance
-var iso = new Isomer(canvas);
-
-// Define the grid dimensions
-var gridWidth = 8;
-var gridHeight = 8;
+// Set the size of the canvas
+canvas.width = 800;
+canvas.height = 600;
 
 // Define the size of each square
-var squareSize = 20;
+const squareSize = 50;
 
-// Define the color of the grid lines
-var gridColor = new Isomer.Color(128, 128, 128);
+// Define the colors to use for the grid lines and squares
+const gridLineColor = 'rgba(100, 100, 100, 0.5)';
+const squareColor = 'rgba(200, 200, 200, 0.5)';
 
-// Draw the grid
-for (var i = 0; i < gridWidth; i++) {
-  for (var j = 0; j < gridHeight; j++) {
-    var x = i * squareSize;
-    var y = j * squareSize;
-    var z = 0;
+// Loop through each row and column of the grid
+for (let x = 0; x < 8; x++) {
+  for (let y = 0; y < 8; y++) {
+    // Calculate the x, y coordinates of the top-left corner of the current square
+    const offsetX = x * squareSize;
+    const offsetY = y * squareSize;
 
     // Draw the square
-    var square = new Isomer.Shape.Prism(
-      new Isomer.Point(x, y, z),
-      squareSize,
-      squareSize,
-      squareSize
-    );
-    iso.add(square);
+    context.fillStyle = squareColor;
+    context.fillRect(offsetX, offsetY, squareSize, squareSize);
 
     // Draw the grid lines
-    var vertices = square.vertices;
-    for (var k = 0; k < vertices.length; k++) {
-      var nextIndex = (k + 1) % vertices.length;
-      var vertex = vertices[k];
-      var nextVertex = vertices[nextIndex];
-
-      var line = new Isomer.Path([
-        vertex,
-        nextVertex
-      ]);
-      line.color = gridColor;
-      iso.add(line);
-    }
+    context.strokeStyle = gridLineColor;
+    context.beginPath();
+    context.moveTo(offsetX, offsetY);
+    context.lineTo(offsetX + squareSize, offsetY);
+    context.lineTo(offsetX + squareSize, offsetY + squareSize);
+    context.lineTo(offsetX, offsetY + squareSize);
+    context.closePath();
+    context.stroke();
   }
 }
